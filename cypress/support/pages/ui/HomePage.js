@@ -1,8 +1,7 @@
 const HomePage = {
     // Selectors
     elements: {
-        productsMenu: () => cy.get('#menu-item-32'),
-        resourcesMenu: () => cy.get('#menu-item-456'),
+        productsMenu: () => cy.get('#menu-main-menu li'),
         newsletterEmail: () => cy.get('input[type="email"]'),
         firstName: () => cy.get('input[name="contact[first_name]"]'),
         lastName: () => cy.get('input[name="contact[last_name]"]'),
@@ -20,22 +19,26 @@ const HomePage = {
         cy.get('#menu-item-32, #menu-item-456').should('exist');
     },
 
-    clickProductsDropdown() {
-        this.elements.productsMenu()
-            .should('exist')
-            .should('be.visible')
-            .realHover();
-        cy.wait(2000);
+    clickProductsDropdown(menuItem) {
+       this.elements.productsMenu() // Select all menu items
+      .contains(menuItem) // Find the one that matches the given text
+      .should('exist')
+      .should('be.visible')
+      .realHover(); //
     },
 
     clickResourcesDropdown() {
-        this.elements.resourcesMenu()
-            .should('exist')
-            .realHover();
         cy.get('ul.sub-menu li a')
             .contains('Newsletter sign-up')
             .click();
         cy.wait(10000);
+        cy.get('#cookie_action_close_header')
+        .trigger('mouseout', { force: true })
+        .then(() => {
+          cy.log('Mouseout triggered on cookie close button');
+        });
+      
+
     },
 
     fillNewsletterForm(email, firstName, lastName) {
